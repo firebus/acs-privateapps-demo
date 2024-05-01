@@ -34,12 +34,14 @@ jobs:
         brew install acs
 
     - name: Configure stack in ACS CLI
+      env:
+        STACK_NAME: ${{ secrets.STACK_NAME }}
       run: |
         acs config add-stack $STACK_NAME --use
 
     - name: Authenticate ACS CLI with ACS
       env:
-        STACK_TOKEN: ${{ secrets.VICTORIA_STACK_TOKEN }}
+        STACK_TOKEN: ${{ secrets.STACK_TOKEN }}
       run: acs login
 
     - name: Install The App On Stack using CLI
