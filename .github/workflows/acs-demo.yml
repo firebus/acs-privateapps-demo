@@ -5,7 +5,7 @@ name: ACS CLI Demo
 on: workflow_dispatch
 
 env:
-  STACK_NAME: ${{ secrets.VICTORIA_STACK_NAME }}
+  STACK_NAME: ${{ secrets.STACK_NAME }}
 
 jobs:
   install-app-classic:
@@ -36,16 +36,19 @@ jobs:
     - name: Configure stack in ACS CLI
       env:
         STACK_NAME: ${{ secrets.STACK_NAME }}
+        ACS_URL: ${{ secrets.ACS_URL }}
       run: |
-        acs config add-stack $STACK_NAME --use
+        acs config add-stack $STACK_NAME --use --server $ACS_URL
 
     - name: Authenticate ACS CLI with ACS
       env:
         STACK_TOKEN: ${{ secrets.STACK_TOKEN }}
-      run: acs login
+        ACS_URL: ${{ secrets.ACS_URL }}
+      run: acs login --server $ACS_URL
 
     - name: Install The App On Stack using CLI
       env:
         SPLUNK_USERNAME: ${{ secrets.SPLUNK_COM_USERNAME }}
         SPLUNK_PASSWORD: ${{ secrets.SPLUNK_COM_PASSWORD }}
-      run: acs apps install private --app-package ./app-package.tar.gz --acs-legal-ack Y 
+        ACS_URL: ${{ secrets.ACS_URL }}
+      run: acs apps install private --app-package ./app-package.tar.gz --acs-legal-ack Y --server $ACS_URL
